@@ -48,8 +48,8 @@ geometry_msgs::PoseStamped get_pose(double x, double y, double z, double q_w, do
 
 int main(int argc, char **argv){
   // To Make extracting values from CSV file!
-	std::ifstream file;
-	file.open("/home/sj/catkin_ws/src/pose_movement/src/pose_seq.csv");
+  std::ifstream file;
+  file.open("/home/<user_name>/catkin_ws/src/pose_movement/src/pose_seq.csv");
 
   std::vector<double> result = parseCSV(file);
 
@@ -72,11 +72,10 @@ int main(int argc, char **argv){
 
     if(index == 7){
       // Initialize PoseStamped parameter!
-
-			index = 0;
+      index = 0;
       std::cout << "Index Initialize" << std::endl;
 
-    	geometry_msgs::PoseStamped pose_track = get_pose(array[0], array[1], array[2], array[3], array[4], array[5], array[6]);
+      geometry_msgs::PoseStamped pose_track = get_pose(array[0], array[1], array[2], array[3], array[4], array[5], array[6]);
       pose_track.header.frame_id = "base_link";
       pose_track.header.stamp = ros::Time::now();
 
@@ -92,12 +91,12 @@ int main(int argc, char **argv){
       pose_pub.publish(pose_track);
       pose_track_pub.publish(pose1);
       odom_pub.publish(odom);
-  	}
-
-    if(result_address == result.end()){
-      std::cout<<"breaking?"<<std::endl;
-      break;
     }
+
+      if(result_address == result.end()){
+        std::cout<<"breaking?"<<std::endl;
+        break;
+      }
 
 	  array[index] = *result_address;
 
@@ -108,7 +107,6 @@ int main(int argc, char **argv){
 
     loop_rate.sleep();
   }
-
 
 	file.close();
 
