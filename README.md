@@ -16,6 +16,7 @@
 
 <br>
 ### publish topic 
+<br>
 - "pose" topic 
   * message type : geometry_msgs::PoseStamped <br>
 - "tracking" topic
@@ -32,13 +33,13 @@
 
 <br>
 ### overall code explanation 
-- function 1 : std::vector<double> parseCSV(std::istream &file)
+- function 1 &#8658; std::vector<double> parseCSV(std::istream &file)
   * CSV file을 받아서 각 방들이 double type을 가지는 std::vector로 넣어준다.
   * 이 경우, comma(,)의 값을 빼고 한 줄에 7개의 Value들이 들어가도록 설정되어 있다.
 
 <br>
 
-- function 2 : geometry_msgs::PoseStamped get_pose(double x, double y, double z, double q_w, double q_x, double q_y, double q_z)
+- function 2 &#8658; geometry_msgs::PoseStamped get_pose(double x, double y, double z, double q_w, double q_x, double q_y, double q_z)
   * double type의 방을 가진 std::vector의 모든 값을 geometry_msgs::PoseStamped로 바꿔준다.
   * 이 경우, 한 줄씩 받아서 while문 안의 __pose_track__에 넣어준다. 
 
