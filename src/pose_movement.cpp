@@ -56,7 +56,7 @@ int main(int argc, char **argv){
   int index = 0;
   double array[7];
 
-  nav_msgs::Path pose1;
+  nav_msgs::Path path;
 
   ros::init(argc, argv, "pose_movement");
   ros::NodeHandle nh;
@@ -79,9 +79,9 @@ int main(int argc, char **argv){
       pose_track.header.frame_id = "base_link";
       pose_track.header.stamp = ros::Time::now();
 
-      pose1.header.stamp = ros::Time::now();
-      pose1.header.frame_id = "base_link";
-      pose1.poses.push_back(pose_track);
+      path.header.stamp = ros::Time::now();
+      path.header.frame_id = "base_link";
+      path.poses.push_back(pose_track);
 
       nav_msgs::Odometry odom;
       odom.header.frame_id = "base_link";
@@ -89,7 +89,7 @@ int main(int argc, char **argv){
       odom.pose.pose = pose_track.pose;
 
       pose_pub.publish(pose_track);
-      pose_track_pub.publish(pose1);
+      pose_track_pub.publish(path);
       odom_pub.publish(odom);
     }
 
