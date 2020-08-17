@@ -31,7 +31,7 @@
 - header.frame_id &#8658; base_link
 
 
-<br>
+
 ### Parameter explanation
 - std::ifstream file &#8658; 나의 Computer에 있는 CSV file을 받을 변수 <br>
 - std::vector<double> result &#8658; CSV file을 comma(,) 제거 후 double type을 가진 std::vector로 넣어주기 위한 변수 <br>
@@ -43,7 +43,7 @@
 - nav_msgs::Odometry odom &#8658; 시작점부터 끝날때까지의 경로를 출력하기 위해서 설정 <br>
 
 
-<br>
+
 ### overall code explanation
 - function 1 &#8658; std::vector<double> parseCSV(std::istream &file)
   * CSV file을 받아서 각 방들이 double type을 가지는 std::vector로 넣어준다.
