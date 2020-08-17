@@ -13,7 +13,7 @@
   * orientation z = -0.52308786
 
 
-<br>
+
 ### Node & Topic explanation <br>
 [Node]
 - "pose_movement" Node
