@@ -1,62 +1,55 @@
-#include <iostream>
-#include <string>
-#include <fstream>
-#include <vector>
-#include <sstream>
-#include <istream>
+#include "read_files.h"
+#include "parsing.h"
 
-#include <ros/ros.h>
-#include <geometry_msgs/PoseStamped.h>
-#include <geometry_msgs/Pose.h>
-#include <nav_msgs/Path.h>
-#include <nav_msgs/Odometry.h>
-#include <tf/tf.h>
+int main(int argc, char **argv)
+{
+  // Get path info
+  if(argc != 2)
+  {
+    printf("please intput: rosrun pose_movement pose_movement [pose path] \n");
+    return 0;
+  }
 
-std::vector<double> parseCSV(std::istream &file){
-	std::vector<double> parse;
-	std::string line;
+  // To Make extracting values from CSV or txt file!
+  std::string pose_path = argv[1];
+  size_t dotPosition = pose_path.find_last_of(".");
+  if (dotPosition == std::string::npos) 
+    return 0;
+  // Get extension of file
+  std::string extension = pose_path.substr(dotPosition + 1);
+  std::cout << "\033[1;32m === extension: " << extension << " ===\033[0m" << std::endl;
 
-	double val;
-
-	while(std::getline(file, line, ',')){
-		std::stringstream s_line(line);
-
-		while(s_line >> val){
-			parse.push_back(val);
-
-			if(s_line.peek() == ',') s_line.ignore();
-		}
-	}
-
-	return parse;
-}
-
-geometry_msgs::PoseStamped get_pose(double x, double y, double z, double q_w, double q_x, double q_y, double q_z){
-  geometry_msgs::PoseStamped posestamp;
-
-  posestamp.pose.position.x = x;
-  posestamp.pose.position.y = y;
-  posestamp.pose.position.z = z;
-
-  posestamp.pose.orientation.x = q_x;
-  posestamp.pose.orientation.y = q_y;
-  posestamp.pose.orientation.z = q_z;
-  posestamp.pose.orientation.w = q_w;
-
-  return posestamp;
-}
-
-int main(int argc, char **argv){
-  // To Make extracting values from CSV file!
   std::ifstream file;
-  file.open("/home/<user_name>/catkin_ws/src/pose_movement/src/pose_seq.csv");
+  file.open(pose_path);
 
-  std::vector<double> result = parseCSV(file);
+  // Set Flag following file extension !!
+  std::string flag;
+  if(extension == "csv")
+    flag = "WITHOUT_TIME";
+  else 
+    flag = "WITH_TIME";
 
+  // Get Pose from file !!
+  std::vector<double> result;  
+  if(flag == "WITHOUT_TIME")
+  {
+    std::cout << "\033[1;33m Pose file without Time ! \033[0m" << std::endl;
+    result = parseCSVfile(file);
+  }
+  else
+  {
+    std::cout << "\033[1;33m Pose file with Time ! \033[0m" << std::endl;
+    result = parseTXTfile(file);
+  }
+  
   int index = 0;
-  double array[7];
-
+  std::vector<double> array;
+  
+  int seq = 0;
+  geometry_msgs::PoseStamped pose_track;
   nav_msgs::Path path;
+  nav_msgs::Odometry odom;
+
 
   ros::init(argc, argv, "pose_movement");
   ros::NodeHandle nh;
@@ -66,49 +59,75 @@ int main(int argc, char **argv){
   ros::Rate loop_rate(10);
 
   auto result_address = result.begin();
-
-  while(ros::ok()){
-
-
-    if(index == 7){
+  
+  while(ros::ok())
+  {
+    if(flag == "WITHOUT_TIME" && index == 7)
+    {
       // Initialize PoseStamped parameter!
       index = 0;
       std::cout << "Index Initialize" << std::endl;
+      std::cout << array[0] << ", " << array[1] << ", " << array[2] << ", " << array[3] << ", " << array[4] << ", " << array[5] << ", " << array[6] << std::endl;
 
-      geometry_msgs::PoseStamped pose_track = get_pose(array[0], array[1], array[2], array[3], array[4], array[5], array[6]);
-      pose_track.header.frame_id = "base_link";
+      pose_track = get_pose(array[0], array[1], array[2], array[3], array[4], array[5], array[6]);
+      pose_track.header.frame_id = "map";
       pose_track.header.stamp = ros::Time::now();
+      pose_track.header.seq = seq++;
 
       path.header.stamp = ros::Time::now();
-      path.header.frame_id = "base_link";
+      path.header.frame_id = "map";
       path.poses.push_back(pose_track);
 
-      nav_msgs::Odometry odom;
-      odom.header.frame_id = "base_link";
+      odom.header.frame_id = "map";
       odom.header.stamp = ros::Time::now();
       odom.pose.pose = pose_track.pose;
 
       pose_pub.publish(pose_track);
       pose_track_pub.publish(path);
       odom_pub.publish(odom);
+
+      array.clear();
+    }
+   
+    if(flag == "WITH_TIME" && index == 8)
+    {
+      // Initialize PoseStamped parameter!
+      index = 0;
+      std::cout << "Index Initialize" << std::endl;
+      std::cout << array[0] << ", " << array[1] << ", " << array[2] << ", " << array[3] << ", " << array[4] << ", " << array[5] << ", " << array[6]  << ", " << array[7] << std::endl;
+
+      pose_track = get_pose(array[0], array[1], array[2], array[3], array[4], array[5], array[6], array[7]);
+      pose_track.header.seq = seq++;
+
+      path.header = pose_track.header;
+      path.poses.push_back(pose_track);
+      
+      odom.header = pose_track.header;
+      odom.pose.pose = pose_track.pose;
+
+      pose_pub.publish(pose_track);
+      pose_track_pub.publish(path);
+      odom_pub.publish(odom);
+
+      array.clear();
     }
 
-      if(result_address == result.end()){
-        std::cout<<"breaking?"<<std::endl;
-        break;
-      }
+    if(result_address == result.end())
+    {
+      std::cout<<"breaking?"<<std::endl;
+      break;
+    }
 
-	  array[index] = *result_address;
-
-		result_address ++;
-		index ++;
+    array.push_back(*result_address);
+    result_address ++;
+    index ++;
 
     std::cout << " new_index : " << index << std::endl;
 
     loop_rate.sleep();
   }
 
-	file.close();
+  file.close();
 
-	return 0;
+  return 0;
 }
