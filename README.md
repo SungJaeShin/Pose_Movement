@@ -22,6 +22,7 @@
 ---
 ### Build and Run
 Clone the repository and build and run simultaneously:
+In `start.sh`, you must put an absolute path of GT files !
 ```
    $ cd catkin_ws/src
    $ git clone https://github.com/SungJaeShin/pose_movement.git
@@ -69,27 +70,38 @@ Clone the repository and build and run simultaneously:
 
 ---
 ### Parameter explanation
-- std::ifstream file &#8658; 나의 Computer에 있는 CSV file을 받을 변수 <br>
-- std::vector<double> result &#8658; CSV file을 comma(,) 제거 후 double type을 가진 std::vector로 넣어주기 위한 변수 <br>
-- int index &#8658; 1set에 7개의 value들이 있기 때문에 구분하기 위해 설정 <br>
-- double array[7] &#8658; 7개의 value들을 담기 위한 임시 배열이고 7개가 모두 채워진다면 이 값들을 publish하기 위해서 설정 <br>
-- nav_msgs::Path path &#8658; pose의 이동경로를 출력하기 위해서 설정 <br>
-- auto result_address &#8658; result의 첫 번째 주소값으로 움직이기 위해 설정 <br>
-- geometry_msgs::PoseStamped pose_track &#8658; 현재 위치해있는 pose를 나타내기 위해 설정 <br>
-- nav_msgs::Odometry odom &#8658; 시작점부터 끝날때까지의 경로를 출력하기 위해서 설정 <br>
+- `std::ifstream file` &#8658; Variable to receive the saved CSV file <br>
+- `std::vector<double> result` &#8658; Variable for converting file into std::vector with double type after removing comma(,) <br>
+- `int index` &#8658; Set to distinguish because there are 7 or 8 values ​​in 1 set <br>
+- `std::vector<double> array` &#8658; This is a temporary array to hold 7 or 8 values ​​and is set to publish these values ​​when all 7 or 8 are filled <br>
+- `auto result_address` &#8658; Set to move to the first address value of result <br>
+- `nav_msgs::Path path` &#8658; Set to output the movement path of the pose <br>
+- `geometry_msgs::PoseStamped pose_track` &#8658; Set to indicate the current pose <br>
+- `nav_msgs::Odometry odom` &#8658; Set to output the overall trajectory from the start point to the end <br>
 
 
+---
+### Function explanation
+- function 1 &#8658; `parseCSVfile(std::istream &file)` & `parseTXTfile(std::istream &file)`
+  - [Case 1] parseCSVfile(std::istream &file)
+    -  Receive the CSV file and insert into a std::vector with a double type.
+    -  In this case, the values ​​are set to be entered removed the value of comma(,).
 
-### overall code explanation
-- function 1 &#8658; std::vector<double> parseCSV(std::istream &file)
-  * CSV file을 받아서 각 방들이 double type을 가지는 std::vector로 넣어준다.
-  * 이 경우, comma(,)의 값을 빼고 Value들이 들어가도록 설정되어 있다.
-
+  - [Case 2] parseTXTfile(std::istream &file)
+    -  Receive the TXT file and insert into a std::vector with a double type.
+    -  In this case, the values ​​are set to be entered removed the value of comma(,).
+    -  Additionally, the first line contains a description of the file variable, so remove it.
+  
 <br>
 
-- function 2 &#8658; geometry_msgs::PoseStamped get_pose(double x, double y, double z, double q_w, double q_x, double q_y, double q_z)
-  * double type의 방을 가진 std::vector의 모든 값을 geometry_msgs::PoseStamped로 바꿔준다.
-  * 이 경우, 한 줄씩 받아서 while문 안의 __pose_track__ 에 넣어준다.
-
-
+- function 2 &#8658; `geometry_msgs::PoseStamped get_pose(~)`
+   - Converts all values ​​of std::vector with double type to geometry_msgs::PoseStamped.
+   - In the case of TXT file, timestamps are also put into geometry_msgs::PoseStamped.
+   - In this case, it receives one line at a time and puts it into __pose_track__ inside the while statement.
+  
 <br>
+
+---
+### Acknowledgement
+Thank you, Gunhee Shin, for advising me on the fast message publishing method ! :)
+
