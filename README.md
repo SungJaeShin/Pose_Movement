@@ -19,6 +19,11 @@
 - header.stamp &#8658; `ros::Time::now()` (csv case) or from `timestamp` (AR table case)
 - header.frame_id &#8658; `map`
 
+**[Fast Visualization]**
+- Change `ros::Rate loop_rate(100);` &rarr; `ros::Rate loop_rate(1000);` : 100 Hz to 1000 Hz !!
+- Change `ros::Rate loop_rate(100);` &rarr; `ros::Rate loop_rate(10);` : 100 Hz to 10 Hz !!
+
+
 ---
 ### Build and Run
 Clone the repository and build and run simultaneously:
