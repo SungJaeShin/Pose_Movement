@@ -58,6 +58,16 @@ Clone the repository and build and run simultaneously:
       * orientation w = 0.253852
 
 ---
+### Visualization AR Table GT Results
+<table>
+  <tr>
+     <td> <img src="./results/ar_table_results1.png"/> </td>
+     <td> <img src="./results/ar_table_results2.png"/> </td>
+  </tr>
+</table>
+
+
+---
 ### Parameter explanation
 - std::ifstream file &#8658; 나의 Computer에 있는 CSV file을 받을 변수 <br>
 - std::vector<double> result &#8658; CSV file을 comma(,) 제거 후 double type을 가진 std::vector로 넣어주기 위한 변수 <br>
