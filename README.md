@@ -26,7 +26,7 @@
 
 ---
 ### Build and Run
-Clone the repository and build and run simultaneously:
+Clone the repository and build and run simultaneously: \
 In `start.sh`, you must put an absolute path of GT files !
 ```
    $ cd catkin_ws/src
