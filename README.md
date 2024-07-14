@@ -1,37 +1,63 @@
-# Pose Tracking
-## pose의 정보가 담겨있는 .csv file을 이용하여 rviz상으로 움직임 파악하기
-### csv file
-[example]
-- 498.00488,-436.80432,-4.7894874,0.55949587,-0.46982133,0.4388751,-0.52308786 <br>
-- 차례대로 다음과 같은 값들을 의미한다.
-  * position x = 498.00488
-  * position y = -436.80432
-  * position z = -4.7894874
-  * orientation w = 0.55949587
-  * orientation x = -0.46982133
-  * orientation y = 0.4388751
-  * orientation z = -0.52308786
+# Pose Tracking Visualization 
+## [Goal] Visualize movement in rviz using a .csv & .txt file containing pose information
+<td> <img src="./results/pose_seq_results.png"/> </td>
 
-
-
+---
 ### Node & Topic explanation <br>
-[Node]
+**[Node]**
 - "pose_movement" Node
 
-[Topic]
+**[Topic]**
 - "pose" topic
-  * message type : geometry_msgs::PoseStamped <br>
+  * message type : `geometry_msgs::PoseStamped` <br>
 - "tracking" topic
-  * message type : nav_msgs::Path <br>
+  * message type : `nav_msgs::Path` <br>
 - "odom" topic
-  * message type : nav_msgs::Odometry <br>
+  * message type : `nav_msgs::Odometry` <br>
 
-[Information]
-- header.stamp &#8658; ros::Time::now()
-- header.frame_id &#8658; base_link
+**[Information]**
+- header.stamp &#8658; `ros::Time::now()` (csv case) or from `timestamp` (AR table case)
+- header.frame_id &#8658; `map`
 
+---
+### Build and Run
+Clone the repository and build and run simultaneously:
+```
+   $ cd catkin_ws/src
+   $ git clone https://github.com/SungJaeShin/pose_movement.git
+   $ cd ../../
+   $ catkin config -DCMAKE_BUILD_TYPE=Release
+   $ catkin build pose_movement
+   $ source devel/setup.bash
+   $ sh start.sh
+```
 
+---
+### Example
+- [Case 1] csv file case
+  - `498.00488,-436.80432,-4.7894874,0.55949587,-0.46982133,0.4388751,-0.52308786`
+    - The example values ​​have the following meanings in turn:
+      * position x = 498.00488
+      * position y = -436.80432
+      * position z = -4.7894874
+      * orientation w = 0.55949587
+      * orientation x = -0.46982133
+      * orientation y = 0.4388751
+      * orientation z = -0.52308786
 
+- [Case 2] txt file case (from [AR table dataset](https://github.com/rpng/ar_table_dataset.git))
+  - `1662915732.37496 2.075780 0.574562 1.116060 -0.424290 -0.670103 0.553623 0.253852`
+    - The example values ​​have the following meanings in turn:
+      * timestamp (sec) = 1662915732.37496
+      * position x = 2.075780
+      * position y = 0.574562
+      * position z = 1.116060
+      * orientation x = -0.424290
+      * orientation y = -0.670103
+      * orientation z = 0.553623
+      * orientation w = 0.253852
+
+---
 ### Parameter explanation
 - std::ifstream file &#8658; 나의 Computer에 있는 CSV file을 받을 변수 <br>
 - std::vector<double> result &#8658; CSV file을 comma(,) 제거 후 double type을 가진 std::vector로 넣어주기 위한 변수 <br>
