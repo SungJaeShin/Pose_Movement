@@ -50,13 +50,12 @@ int main(int argc, char **argv)
   nav_msgs::Path path;
   nav_msgs::Odometry odom;
 
-
   ros::init(argc, argv, "pose_movement");
   ros::NodeHandle nh;
-  ros::Publisher pose_pub = nh.advertise<geometry_msgs::PoseStamped>("pose", 100);
-  ros::Publisher pose_track_pub = nh.advertise<nav_msgs::Path>("tracking", 100);
-  ros::Publisher odom_pub = nh.advertise<nav_msgs::Odometry>("odom", 100);
-  ros::Rate loop_rate(10);
+  ros::Publisher pose_pub = nh.advertise<geometry_msgs::PoseStamped>("pose", 1000);
+  ros::Publisher pose_track_pub = nh.advertise<nav_msgs::Path>("tracking", 1000);
+  ros::Publisher odom_pub = nh.advertise<nav_msgs::Odometry>("odom", 1000);
+  ros::Rate loop_rate(100);
 
   auto result_address = result.begin();
   

@@ -27,6 +27,16 @@ std::vector<double> parseTXTfile(std::istream &file) {
         std::stringstream s_line(line);
         double val;
 
+        // Skip first line which informs descriptions
+        std::string cell;
+        s_line >> cell;
+        std::stringstream s_cell(cell);
+        if (!(s_cell >> val)) {
+            std::cout << "Skipping line: " << line << std::endl;
+            continue;
+        }
+        parse.push_back(val);
+
         while (s_line >> val) {
             parse.push_back(val);
         }
