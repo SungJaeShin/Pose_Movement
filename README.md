@@ -2,6 +2,12 @@
 ## [Goal] Visualize movement in rviz using a .csv & .txt file containing pose information
 <td> <img src="./results/pose_seq_results.png"/> </td>
 
+\
+
+![top_view](https://github.com/SungJaeShin/pose_movement/blob/master/results/ar_table_01_front_view.gif?raw=true)
+
+
+
 ---
 ### Node & Topic explanation <br>
 **[Node]**
