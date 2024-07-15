@@ -134,6 +134,10 @@ In `start.sh`, you must put an absolute path of GT files and Flag to visualize A
 <br>
 
 ---
+### Important Thing of Publisher Latch !!
+One of publisher argument "**Latch**" allows the ROS publisher to automatically transmit the last published message to the newly connected subscriber.
+
+---
 ### Acknowledgement
 Thank you, Gunhee Shin, for advising me on the fast message publishing method ! :)
 
