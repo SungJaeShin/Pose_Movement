@@ -1,26 +1,20 @@
 #include "read_files.h"
 #include "parsing.h"
 
-void PubPathatOnce(ros::NodeHandle nh, std::vector<double> path, std::string flag)
+void PubPathatOnce(ros::NodeHandle &nh, ros::Publisher pub_full_path , std::vector<double> path, std::string flag)
 {
     std::vector<double> tmp_path(path);
-    std::cout << "full path size: " << tmp_path.size() / 8 << std::endl;
 
     int seq = 0;
     int cur_idx = 0;
     nav_msgs::Path full_path;
-    full_path.header.stamp = ros::Time::now();
-    full_path.header.frame_id = "map";
-    full_path.header.seq = 0;
-
-    ros::Publisher pub_full_path = nh.advertise<nav_msgs::Path>("full_trajectory", 10000, true);
 
     std::cout << "\033[1;34m ===> Get Full Path at Once !! \033[0m" << std::endl;
     while(cur_idx < tmp_path.size())
     {
         // Initialize PoseStamped parameter!
         geometry_msgs::PoseStamped cur_pose;
-        if(flag == "WITHOUT_TIME" && cur_idx % 7 == 0 && cur_idx + 7 <= tmp_path.size())
+        if(flag == "WITHOUT_TIME" && cur_idx + 7 <= tmp_path.size())
         {
             cur_pose = get_pose(tmp_path[cur_idx], tmp_path[cur_idx + 1], tmp_path[cur_idx + 2], tmp_path[cur_idx + 3], 
                                                    tmp_path[cur_idx + 4], tmp_path[cur_idx + 5], tmp_path[cur_idx + 6]);
@@ -31,7 +25,7 @@ void PubPathatOnce(ros::NodeHandle nh, std::vector<double> path, std::string fla
             full_path.poses.push_back(cur_pose);
             cur_idx += 7;
         }
-        else if(flag == "WITH_TIME" && cur_idx % 8 == 0 && cur_idx + 8 <= tmp_path.size())
+        else if(flag == "WITH_TIME" && cur_idx + 8 <= tmp_path.size())
         {
             cur_pose = get_pose(tmp_path[cur_idx],     tmp_path[cur_idx + 1], tmp_path[cur_idx + 2], tmp_path[cur_idx + 3], 
                                 tmp_path[cur_idx + 4], tmp_path[cur_idx + 5], tmp_path[cur_idx + 6], tmp_path[cur_idx + 7]);
@@ -43,19 +37,13 @@ void PubPathatOnce(ros::NodeHandle nh, std::vector<double> path, std::string fla
         else
             break;
 
-        // if(cur_idx % 7 == 0 || cur_idx % 8 == 0)
-        // {
-            
-        // }
-
-
-        // === For Debugging ===
+        // // === For Debugging ===
         // if(cur_idx % 7 == 0 || cur_idx % 8 == 0)
         //     std::cout << "=== cur pose === \n" << cur_pose.pose << std::endl;
     }        
-    
-    pub_full_path.publish(full_path);
 
+    full_path.header = full_path.poses[0].header;
+    pub_full_path.publish(full_path);
 }
 
 int main(int argc, char **argv)
@@ -63,7 +51,7 @@ int main(int argc, char **argv)
     // Get path info
     if(argc != 3)
     {
-        printf("please intput: rosrun pose_movement pose_movement [pose path] \n");
+        printf("please intput: rosrun pose_movement pose_movement [pose path] [full_path_flag] \n");
         return 0;
     }
 
@@ -98,13 +86,11 @@ int main(int argc, char **argv)
         std::cout << "\033[1;33m ===> Pose file with Time ! \033[0m" << std::endl;
         result = parseTXTfile(file);
     }
-    
-    std::cout << "result size: " << result.size() / 8 << std::endl;
 
+    int seq = 0;
     int index = 0;
     std::vector<double> array;
     
-    int seq = 0;
     geometry_msgs::PoseStamped pose_track;
     nav_msgs::Path path;
     nav_msgs::Odometry odom;
@@ -114,22 +100,19 @@ int main(int argc, char **argv)
     ros::Publisher pose_pub = nh.advertise<geometry_msgs::PoseStamped>("pose", 1000);
     ros::Publisher pose_track_pub = nh.advertise<nav_msgs::Path>("tracking", 1000);
     ros::Publisher odom_pub = nh.advertise<nav_msgs::Odometry>("odom", 1000);
+    ros::Publisher full_path_pub = nh.advertise<nav_msgs::Path>("full_trajectory", 10000, true);
     ros::Rate loop_rate(100);
 
     // If you want to publish full trajectory at once, then using this function !
-    bool useFullPath = false;
     std::string full_path_once = argv[2];
     if(full_path_once == "true")
-    {
-        useFullPath = true;
-        PubPathatOnce(nh, result, flag);
-    }
+        PubPathatOnce(nh, full_path_pub, result, flag);
 
     auto result_address = result.begin();
     
     while(ros::ok())
     {
-        if(flag == "WITHOUT_TIME" && index == 7 && !useFullPath)
+        if(flag == "WITHOUT_TIME" && index == 7)
         {
             // Initialize PoseStamped parameter!
             index = 0;
@@ -156,7 +139,7 @@ int main(int argc, char **argv)
             array.clear();
         }
       
-        if(flag == "WITH_TIME" && index == 8 && !useFullPath)
+        if(flag == "WITH_TIME" && index == 8)
         {
             // Initialize PoseStamped parameter!
             index = 0;
