@@ -2,7 +2,7 @@
 ## [Goal] Visualize movement in rviz using a .csv & .txt file containing pose information
 <td> <img src="./results/pose_seq_results.png"/> </td> 
 
-- **Visualized Current Pose on Trajectory**
+**Visualized Current Pose on Trajectory**
   ![pose_seq_top_view](https://github.com/SungJaeShin/pose_movement/blob/master/results/pose_seq_top_view.gif?raw=true)
 
 ---
@@ -94,7 +94,7 @@ In `start.sh`, you must put an absolute path of GT files and Flag to visualize A
   </table>
 
 - **Visualized Current Pose on Trajectory**
-  | Front View | Top View |
+  | Top View | Front View |
   |--------------|------------------|
   | ![top_view](https://github.com/SungJaeShin/pose_movement/blob/master/results/ar_table_01_top_view.gif?raw=true) | ![front_view](https://github.com/SungJaeShin/pose_movement/blob/master/results/ar_table_01_front_view.gif?raw=true) |
 
