@@ -1,12 +1,9 @@
 # Pose Tracking Visualization 
 ## [Goal] Visualize movement in rviz using a .csv & .txt file containing pose information
-<td> <img src="./results/pose_seq_results.png"/> </td>
+<td> <img src="./results/pose_seq_results.png"/> </td> 
 
-\
-
-![top_view](https://github.com/SungJaeShin/pose_movement/blob/master/results/ar_table_01_front_view.gif?raw=true)
-
-
+- **Visualized Current Pose on Trajectory**
+  ![pose_seq_top_view](https://github.com/SungJaeShin/pose_movement/blob/master/results/pose_seq_top_view.gif?raw=true)
 
 ---
 ### Node & Topic explanation <br>
@@ -97,13 +94,10 @@ In `start.sh`, you must put an absolute path of GT files and Flag to visualize A
   </table>
 
 - **Visualized Current Pose on Trajectory**
-  <table>
-    <tr>
-       <td> ![top_view](https://github.com/SungJaeShin/pose_movement/blob/master/results/ar_table_01_front_view.gif?raw=true)
- </td>
-       <td> <img src="./results/ar_table_results2.png"/> </td>
-    </tr>
-  </table>
+  | Front View | Top View |
+  |--------------|------------------|
+  | ![top_view](https://github.com/SungJaeShin/pose_movement/blob/master/results/ar_table_01_top_view.gif?raw=true) | ![front_view](https://github.com/SungJaeShin/pose_movement/blob/master/results/ar_table_01_front_view.gif?raw=true) |
+
 
 
 ---
