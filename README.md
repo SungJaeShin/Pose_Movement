@@ -14,12 +14,14 @@
 - "pose_movement" Node
 
 **[Topic]**
-- "pose" topic
+- "**pose**" topic
   * message type : `geometry_msgs::PoseStamped` <br>
-- "tracking" topic
+- "**tracking**" topic
   * message type : `nav_msgs::Path` <br>
-- "odom" topic
+- "**odom**" topic
   * message type : `nav_msgs::Odometry` <br>
+- "**full_trajectory**" topic
+  * message type : `nav_msgs::Path` <br>
 
 **[Information]**
 - header.stamp &#8658; `ros::Time::now()` (csv case) or from `timestamp` (AR table case)
@@ -33,7 +35,6 @@
 ---
 ### Build and Run
 Clone the repository and build and run simultaneously: \
-In `start.sh`, you must put an absolute path of GT files !
 ```
    $ cd catkin_ws/src
    $ git clone https://github.com/SungJaeShin/pose_movement.git
@@ -43,6 +44,14 @@ In `start.sh`, you must put an absolute path of GT files !
    $ source devel/setup.bash
    $ sh start.sh
 ```
+In `start.sh`, you must put an absolute path of GT files and Flag to visualize All trajectory at once !
+```
+   #!/bin/bash
+   rosrun pose_movement pose_movement [pose path] [full path flag]
+```
+  - **[pose path]** &rarr; Put absolute file path !!
+  - **[full path flag]** &rarr; Set true (visualize) or false (not visualize) to show all trajectory at once ! 
+
 
 ---
 ### Example
@@ -71,12 +80,30 @@ In `start.sh`, you must put an absolute path of GT files !
 
 ---
 ### Visualization AR Table GT Results
-<table>
-  <tr>
-     <td> <img src="./results/ar_table_results1.png"/> </td>
-     <td> <img src="./results/ar_table_results2.png"/> </td>
-  </tr>
-</table>
+- **Visualized All Trajectory at Once**
+  <table>
+    <tr>
+       <td> <img src="./results/ar_table_all_traj1.png"/> </td>
+       <td> <img src="./results/ar_table_all_traj2.png"/> </td>
+    </tr>
+  </table>
+
+- **Visualized Trajectory Iteratively**
+  <table>
+    <tr>
+       <td> <img src="./results/ar_table_results1.png"/> </td>
+       <td> <img src="./results/ar_table_results2.png"/> </td>
+    </tr>
+  </table>
+
+- **Visualized Current Pose on Trajectory**
+  <table>
+    <tr>
+       <td> ![top_view](https://github.com/SungJaeShin/pose_movement/blob/master/results/ar_table_01_front_view.gif?raw=true)
+ </td>
+       <td> <img src="./results/ar_table_results2.png"/> </td>
+    </tr>
+  </table>
 
 
 ---
