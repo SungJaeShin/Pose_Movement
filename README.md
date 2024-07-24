@@ -5,6 +5,15 @@
 **Visualized Current Pose on Trajectory**
   ![pose_seq_top_view](https://github.com/SungJaeShin/pose_movement/blob/master/results/pose_seq_top_view.gif?raw=true)
 
+**Visualized Current Pose on 3D PointCloud Map (AR Table)**
+  ![map_based_tracking](https://github.com/SungJaeShin/pose_movement/blob/master/results/mapbasedtracking.gif?raw=true)
+
+
+---
+### Dependencies <br>
+- ROS (test on Noetic): [ROS Installation](https://wiki.ros.org/noetic/Installation/Ubuntu)
+- Pointcloud Library for ROS (test 1.7.4 version): [ros-perception-pcl](https://github.com/ros-perception/perception_pcl/releases/tag/1.7.4)
+
 ---
 ### Node & Topic explanation <br>
 **[Node]**
@@ -28,6 +37,8 @@
 - Change `ros::Rate loop_rate(100);` &rarr; `ros::Rate loop_rate(1000);` : 100 Hz to 1000 Hz !!
 - Change `ros::Rate loop_rate(100);` &rarr; `ros::Rate loop_rate(10);` : 100 Hz to 10 Hz !!
 
+**[Change TF Coordinate]**
+- Change `transform.translation()` & `transform.rotate()` to fit origin !!
 
 ---
 ### Build and Run
@@ -44,11 +55,11 @@ Clone the repository and build and run simultaneously: \
 In `start.sh`, you must put an absolute path of GT files and Flag to visualize All trajectory at once !
 ```
    #!/bin/bash
-   rosrun pose_movement pose_movement [pose path] [full path flag]
+   rosrun pose_movement pose_movement [pose path] [full path flag] [(Option) pointcloud map path]
 ```
   - **[pose path]** &rarr; Put absolute file path !!
-  - **[full path flag]** &rarr; Set true (visualize) or false (not visualize) to show all trajectory at once ! 
-
+  - **[full path flag]** &rarr; Set true (visualize) or false (not visualize) to show all trajectory at once !
+  - **[pointcloud map path]** &rarr; Put absolute pointcloud (ply) file path !! (Optional Mode!!)
 
 ---
 ### Example
@@ -98,6 +109,13 @@ In `start.sh`, you must put an absolute path of GT files and Flag to visualize A
   |--------------|------------------|
   | ![top_view](https://github.com/SungJaeShin/pose_movement/blob/master/results/ar_table_01_top_view.gif?raw=true) | ![front_view](https://github.com/SungJaeShin/pose_movement/blob/master/results/ar_table_01_front_view.gif?raw=true) |
 
+- **Visualized Map Transformation Local to Global**
+  <table>
+    <tr>
+       <td> <img src="./results/before_tf_pc_map.png"/> </td>
+       <td> <img src="./results/after_tf_pc_map.png"/> </td>
+    </tr>
+  </table>
 
 
 ---
