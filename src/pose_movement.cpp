@@ -46,12 +46,26 @@ void PubPathatOnce(ros::NodeHandle &nh, ros::Publisher pub_full_path , std::vect
     pub_full_path.publish(full_path);
 }
 
+void PubPointCloudatOnce(ros::NodeHandle &nh, ros::Publisher pub_ply_path, pcl::PointCloud<pcl::PointXYZ>::Ptr pc_map, Eigen::Affine3f first_pose)
+{
+    std::cout << "\033[1;34m ===> Visualization Pointcloud Map at Once !! \033[0m" << std::endl;
+    sensor_msgs::PointCloud2 map_;
+    
+    // Transformation pc_map to Origin !!
+    pcl::transformPointCloud(*pc_map, *pc_map, first_pose);
+    pcl::toROSMsg(*pc_map, map_);
+
+    map_.header.stamp = ros::Time::now();
+    map_.header.frame_id = "map";
+    pub_ply_path.publish(map_);
+}
+
 int main(int argc, char **argv)
 {
     // Get path info
-    if(argc != 3)
+    if(argc != 3 && argc != 4)
     {
-        printf("please intput: rosrun pose_movement pose_movement [pose path] [full_path_flag] \n");
+        printf("please intput: rosrun pose_movement pose_movement [pose path] [full_path_flag] [(Option) pointcloud map path] \n");
         return 0;
     }
 
@@ -86,28 +100,43 @@ int main(int argc, char **argv)
         std::cout << "\033[1;33m ===> Pose file with Time ! \033[0m" << std::endl;
         result = parseTXTfile(file);
     }
-
-    int seq = 0;
-    int index = 0;
-    std::vector<double> array;
     
-    geometry_msgs::PoseStamped pose_track;
-    nav_msgs::Path path;
-    nav_msgs::Odometry odom;
-
     ros::init(argc, argv, "pose_movement");
     ros::NodeHandle nh;
     ros::Publisher pose_pub = nh.advertise<geometry_msgs::PoseStamped>("pose", 1000);
     ros::Publisher pose_track_pub = nh.advertise<nav_msgs::Path>("tracking", 1000);
     ros::Publisher odom_pub = nh.advertise<nav_msgs::Odometry>("odom", 1000);
     ros::Publisher full_path_pub = nh.advertise<nav_msgs::Path>("full_trajectory", 10000, true);
-    ros::Rate loop_rate(100);
+    ros::Publisher map_pub = nh.advertise<sensor_msgs::PointCloud2>("pc_map", 1000, true);
+    ros::Rate loop_rate(1000);
+
+    int seq = 0;
+    int index = 0;
+    std::vector<double> array;
+
+    geometry_msgs::PoseStamped pose_track;
+    nav_msgs::Path path;
+    nav_msgs::Odometry odom;
+    tf::TransformListener tf_listener;
 
     // If you want to publish full trajectory at once, then using this function !
     std::string full_path_once = argv[2];
     if(full_path_once == "true")
         PubPathatOnce(nh, full_path_pub, result, flag);
 
+    // If you want to publish pointcloud map at once, then using this function !
+    if(argc == 4)
+    {    
+        // Get PointCloud from PLY file !
+        std::string pc_map_once = argv[3];
+        pcl::PointCloud<pcl::PointXYZ>::Ptr pc_map = readPLYfile(pc_map_once);
+
+        // Get First Pose of GT because of tranform to Origin !
+        Eigen::Affine3f first_pose = getTransformFromFirstPose(result, flag);
+
+        PubPointCloudatOnce(nh, map_pub, pc_map, first_pose);
+    }
+    
     auto result_address = result.begin();
     
     while(ros::ok())

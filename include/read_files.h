@@ -1,4 +1,5 @@
 #include "include.h"
+#include "utility.h"
 
 // For file format following as: x, y, z, qw, qx, qy, qz (CSV format !!)
 std::vector<double> parseCSVfile(std::istream &file){
@@ -19,7 +20,7 @@ std::vector<double> parseCSVfile(std::istream &file){
 }
 
 // For file format following as: time, x, y, z, qx, qy, qz, qw (TXT format !!)
-std::vector<double> parseTXTfile(std::istream &file) {
+std::vector<double> parseTXTfile(std::istream &file){
     std::vector<double> parse;
     std::string line;
 
@@ -42,4 +43,16 @@ std::vector<double> parseTXTfile(std::istream &file) {
         }
     }
     return parse;
+}
+
+// Read PLY file using PCL library
+pcl::PointCloud<pcl::PointXYZ>::Ptr readPLYfile(std::string &file)
+{
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
+    if (pcl::io::loadPLYFile<pcl::PointXYZ>(file, *cloud) == -1) 
+    {
+        PCL_ERROR("Couldn't read the ply file\n");
+        return cloud;
+    }
+    return cloud;
 }
