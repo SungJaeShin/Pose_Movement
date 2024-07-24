@@ -109,7 +109,7 @@ In `start.sh`, you must put an absolute path of GT files and Flag to visualize A
   |--------------|------------------|
   | ![top_view](https://github.com/SungJaeShin/pose_movement/blob/master/results/ar_table_01_top_view.gif?raw=true) | ![front_view](https://github.com/SungJaeShin/pose_movement/blob/master/results/ar_table_01_front_view.gif?raw=true) |
 
-- **Visualized Map Transformation Local to Global**
+- **Visualized PointCloud Map Transformation Local to Global**
   <table>
     <tr>
        <td> <img src="./results/before_tf_pc_map.png"/> </td>
