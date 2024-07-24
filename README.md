@@ -28,6 +28,8 @@
   * message type : `nav_msgs::Odometry` <br>
 - "**full_trajectory**" topic
   * message type : `nav_msgs::Path` <br>
+- "**pc_map**" topic
+  * message type : `sensor_msgs::PointCloud2` <br>
 
 **[Information]**
 - header.stamp &#8658; `ros::Time::now()` (csv case) or from `timestamp` (AR table case)
